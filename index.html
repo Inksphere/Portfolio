@@ -1,0 +1,757 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typixel Design Agency</title>
+    
+    <!-- FAVICON -->
+    <link rel="icon" href="https://z-cdn-media.chatglm.cn/files/db59a431-5745-42ec-8575-eda0a0d7d874.png?auth_key=1877803378-171e0b259fba4a18b98bd102cd7552e3-0-9f785a189e477354911412f66e12d36d" type="image/png">
+
+    <!-- 1. PRELOAD & FONTS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- 2. TAILWIND CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Inter', 'sans-serif'] },
+                    colors: {
+                        brand: { 50: '#fef2f2', 100: '#fee2e2', 500: '#ef4444', 600: '#dc2626', 700: '#b91c1c', 900: '#7f1d1d' },
+                        dark: { 900: '#0a0a0a', 800: '#171717', 700: '#262626' }
+                    }
+                }
+            }
+        }
+    </script>
+    
+    <!-- Icons -->
+    <script src="https://code.iconify.design/iconify-icon/1.0.7/iconify-icon.min.js"></script>
+    
+    <!-- Note: EmailJS script removed as requested -->
+
+    <!-- 3. CRITICAL CSS -->
+    <style>
+        /* Force Dark Mode Immediately */
+        html, body {
+            background-color: #0a0a0a;
+            color: #ffffff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            overflow-x: hidden;
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #0a0a0a; }
+        ::-webkit-scrollbar-thumb { background: #dc2626; border-radius: 4px; }
+
+        /* Loader */
+        #app-loader {
+            position: fixed; inset: 0; z-index: 60;
+            background: #0a0a0a; display: flex; 
+            align-items: center; justify-content: center;
+            transition: opacity 0.5s ease;
+        }
+        
+        /* Animation Utilities */
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(20px); } }
+        
+        .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+        .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(220, 38, 38, 0.3); }
+
+        /* Logo Spin */
+        .logo-spin:hover {
+            animation: gentleSpin 3s linear infinite;
+        }
+        @keyframes gentleSpin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        /* Marquee / Moving Text Animation */
+        .marquee-wrapper {
+            overflow: hidden;
+            white-space: nowrap;
+            position: relative;
+        }
+        .marquee-content {
+            display: inline-block;
+            animation: scroll 25s linear infinite;
+        }
+        @keyframes scroll {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-50%); }
+        }
+
+        /* Glassmorphism */
+        .glass {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        /* Toast Notification */
+        .toast {
+            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
+            background: #171717; color: #fff; padding: 12px 24px;
+            border-radius: 50px; border: 1px solid #333;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5); z-index: 100;
+            display: flex; align-items: center; gap: 10px;
+            opacity: 0; pointer-events: none; transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .toast.active { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.success { border-color: #dc2626; }
+        .toast.error { border-color: #ef4444; }
+
+        /* Review Form Stars */
+        .star-rating input { display: none; }
+        .star-rating label {
+            cursor: pointer;
+            color: #4b5563;
+            font-size: 1.5rem;
+            transition: color 0.2s;
+        }
+        .star-rating input:checked ~ label,
+        .star-rating label:hover,
+        .star-rating label:hover ~ label {
+            color: #fbbf24; /* Amber 400 */
+        }
+        .star-rating { display: flex; flex-direction: row-reverse; justify-content: flex-end; }
+    </style>
+</head>
+<body class="dark text-gray-100 antialiased selection:bg-brand-600 selection:text-white">
+
+    <!-- LOADING SPINNER -->
+    <div id="app-loader">
+        <div class="flex flex-col items-center animate-pulse">
+            <iconify-icon icon="lucide:hexagon" class="text-6xl text-brand-600 mb-4 animate-spin"></iconify-icon>
+            <span class="text-brand-600 font-bold tracking-widest text-sm">LOADING TYPIXEL</span>
+        </div>
+    </div>
+
+    <!-- TOAST NOTIFICATION CONTAINER -->
+    <div id="toast" class="toast">
+        <iconify-icon icon="lucide:check-circle" class="text-green-500"></iconify-icon>
+        <span id="toast-msg" class="text-sm font-medium">Notification</span>
+    </div>
+
+    <!-- MAIN CONTAINER -->
+    <div id="main-content" style="display:none;">
+        
+        <!-- ========== HEADER ========== -->
+        <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-300 backdrop-blur-xl bg-dark-900/80 border-b border-white/5">
+            <div class="max-w-7xl mx-auto px-5 sm:px-8 lg:px-12 h-20 flex items-center justify-between">
+                
+                <!-- LEFT: Logo -->
+                <div class="flex items-center gap-3 cursor-pointer group" onclick="window.scrollTo(0,0)">
+                    <div class="relative w-10 h-10 flex items-center justify-center logo-spin">
+                        <img src="https://z-cdn-media.chatglm.cn/files/db59a431-5745-42ec-8575-eda0a0d7d874.png?auth_key=1877803378-171e0b259fba4a18b98bd102cd7552e3-0-9f785a189e477354911412f66e12d36d" 
+                             alt="Typixel Logo" 
+                             class="w-full h-full object-contain">
+                    </div>
+                    <div>
+                        <span class="text-xl font-bold tracking-tight text-white group-hover:text-brand-600 transition-colors">Typixel</span>
+                        <span class="block text-[10px] font-medium tracking-[0.15em] text-gray-400 uppercase">Design Agency</span>
+                    </div>
+                </div>
+
+                <!-- CENTER: Navigation -->
+                <div class="hidden md:flex items-center gap-8">
+                    <a href="#home" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Home</a>
+                    <a href="#services" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Services</a>
+                    <a href="#portfolio" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Portfolio</a>
+                    <a href="#team" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Team</a>
+                    <a href="#reviews" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Reviews</a>
+                    <a href="#contact" class="text-sm font-medium text-brand-500 hover:text-white transition-colors">Contact</a>
+                </div>
+
+                <!-- RIGHT: Button Only -->
+                <div class="flex items-center gap-4">
+                    <a href="#contact" 
+                       class="hidden sm:flex bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-wider px-6 py-3 rounded-full items-center gap-2 transition-all transform hover:scale-105 shadow-lg shadow-brand-600/20">
+                        Let's Talk
+                    </a>
+                    <button onclick="toggleMenu()" class="md:hidden w-10 h-10 rounded-full bg-white/5 border border-white/10 flex items-center justify-center text-white">
+                        <iconify-icon icon="lucide:menu" class="text-xl"></iconify-icon>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Menu -->
+            <div id="mobile-menu" class="hidden absolute top-20 left-0 w-full bg-dark-900 border-b border-white/10 p-6 flex-col gap-4 md:hidden shadow-2xl z-40">
+                <a onclick="toggleMenu()" href="#home" class="text-lg font-medium text-white hover:text-brand-600">Home</a>
+                <a onclick="toggleMenu()" href="#services" class="text-lg font-medium text-white hover:text-brand-600">Services</a>
+                <a onclick="toggleMenu()" href="#portfolio" class="text-lg font-medium text-white hover:text-brand-600">Portfolio</a>
+                <a onclick="toggleMenu()" href="#team" class="text-lg font-medium text-white hover:text-brand-600">Our Team</a>
+                <a onclick="toggleMenu()" href="#reviews" class="text-lg font-medium text-white hover:text-brand-600">Reviews</a>
+                <a onclick="toggleMenu()" href="#contact" class="text-lg font-medium text-white hover:text-brand-600">Contact</a>
+                <a href="https://wa.me/919072891142" class="w-full py-3 bg-brand-600 text-center rounded-full font-bold uppercase tracking-wider mt-4">Let's Talk</a>
+            </div>
+        </nav>
+
+        <!-- ========== HOME ========== -->
+        <section id="home" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-br from-dark-900 via-dark-900 to-black -z-20"></div>
+            <div class="absolute top-1/4 left-1/4 w-96 h-96 bg-brand-600/10 rounded-full blur-[100px] -z-10"></div>
+            <div class="absolute bottom-1/4 right-1/4 w-80 h-80 bg-brand-700/10 rounded-full blur-[80px] -z-10"></div>
+            <div class="absolute inset-0 opacity-20 -z-10" style="background-image: radial-gradient(white 1px, transparent 1px); background-size: 30px 30px;"></div>
+
+            <div class="max-w-5xl mx-auto px-5 text-center relative z-10">
+                <span class="inline-block py-1 px-3 rounded-full bg-brand-600/10 border border-brand-600/30 text-brand-500 text-xs font-bold uppercase tracking-widest mb-6 fade-in">
+                    Premium Design Agency
+                </span>
+                <h1 class="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-black leading-tight mb-6 fade-in">
+                    Design With Purpose,<br>
+                    <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-200 to-gray-400">Creativity With Passion</span>
+                </h1>
+                <p class="text-lg sm:text-xl text-gray-400 max-w-2xl mx-auto mb-10 font-light fade-in">
+                    We build clear, modern, and impactful visual identities that help brands communicate with confidence.
+                </p>
+                <div class="flex flex-col sm:flex-row gap-4 justify-center fade-in">
+                    <a href="#portfolio" class="px-8 py-4 rounded-full border border-white/20 hover:border-white text-white font-medium transition-all hover:bg-white hover:text-black">View Portfolio</a>
+                    <a href="#contact" class="px-8 py-4 rounded-full bg-brand-600 hover:bg-brand-700 text-white font-bold uppercase tracking-wider shadow-lg shadow-brand-600/25 transition-all hover:scale-105">Start a Project</a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== CLIENTS LOGOS (Marquee) ========== -->
+        <div class="border-y border-white/5 bg-black/50 py-10 overflow-hidden">
+            <p class="text-center text-xs font-bold uppercase tracking-widest text-gray-500 mb-8">Trusted By</p>
+            <div class="marquee-wrapper w-full">
+                <div class="marquee-content">
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">TOURIST CHAMAYAM</span>
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">LUXE INTERIORS</span>
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">FOODCRAFT</span>
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">TECHVAULT</span>
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">NEON STUDIO</span>
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">APEX TECH</span>
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">VIBE COFFEE</span>
+                    <!-- Duplicate -->
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">TOURIST CHAMAYAM</span>
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">LUXE INTERIORS</span>
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">FOODCRAFT</span>
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">TECHVAULT</span>
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">NEON STUDIO</span>
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">APEX TECH</span>
+                    <span class="text-xl font-bold mx-12 opacity-50 hover:opacity-100 transition-opacity cursor-default">VIBE COFFEE</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========== SERVICES ========== -->
+        <section id="services" class="py-24 relative">
+            <div class="absolute top-0 right-0 w-72 h-72 bg-brand-700/5 rounded-full blur-3xl"></div>
+            <div class="max-w-7xl mx-auto px-5 sm:px-8 relative z-10">
+                <div class="text-center mb-16">
+                    <span class="text-brand-600 font-bold uppercase tracking-widest text-xs">Expertise</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold mt-2">Our Services</h2>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white/5 border border-white/5 rounded-2xl p-8 hover:bg-white/10 transition-colors group hover-lift">
+                        <div class="w-12 h-12 bg-brand-600 rounded-lg flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform"><iconify-icon icon="lucide:pen-tool"></iconify-icon></div>
+                        <h3 class="text-xl font-bold mb-2">Branding & Identity</h3>
+                        <p class="text-sm text-gray-400 mb-4">Complete visual identities — logos, color systems, typography, and brand guidelines.</p>
+                        <span class="text-brand-500 font-bold text-sm">From ₹4,999</span>
+                    </div>
+                    <div class="bg-white/5 border border-white/5 rounded-2xl p-8 hover:bg-white/10 transition-colors group hover-lift">
+                        <div class="w-12 h-12 bg-brand-600 rounded-lg flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform"><iconify-icon icon="lucide:layout"></iconify-icon></div>
+                        <h3 class="text-xl font-bold mb-2">UI/UX Design</h3>
+                        <p class="text-sm text-gray-400 mb-4">Modern, user-focused interfaces for websites and apps.</p>
+                        <span class="text-brand-500 font-bold text-sm">From ₹14,999</span>
+                    </div>
+                    <div class="bg-white/5 border border-white/5 rounded-2xl p-8 hover:bg-white/10 transition-colors group hover-lift">
+                        <div class="w-12 h-12 bg-brand-600 rounded-lg flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform"><iconify-icon icon="lucide:instagram"></iconify-icon></div>
+                        <h3 class="text-xl font-bold mb-2">Social Media</h3>
+                        <p class="text-sm text-gray-400 mb-4">Scroll-stopping social media designs — posts, stories, banners.</p>
+                        <span class="text-brand-500 font-bold text-sm">From ₹3,999</span>
+                    </div>
+                    <div class="bg-white/5 border border-white/5 rounded-2xl p-8 hover:bg-white/10 transition-colors group hover-lift">
+                        <div class="w-12 h-12 bg-brand-600 rounded-lg flex items-center justify-center text-white mb-6 group-hover:scale-110 transition-transform"><iconify-icon icon="lucide:megaphone"></iconify-icon></div>
+                        <h3 class="text-xl font-bold mb-2">Ad & Promo</h3>
+                        <p class="text-sm text-gray-400 mb-4">Advertising and promotional designs — flyers, banners, posters.</p>
+                        <span class="text-brand-500 font-bold text-sm">From ₹2,999</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== PORTFOLIO ========== -->
+        <section id="portfolio" class="py-24 bg-black/30">
+            <div class="absolute bottom-0 left-0 w-96 h-96 bg-brand-700/5 rounded-full blur-3xl"></div>
+            <div class="max-w-7xl mx-auto px-5 sm:px-8 relative z-10">
+                <div class="flex justify-between items-end mb-16">
+                    <div>
+                        <span class="text-brand-600 font-bold uppercase tracking-widest text-xs">Work</span>
+                        <h2 class="text-7xl sm:text-8xl font-black text-white tracking-tight">9 Items</h2>
+                    </div>
+                    <a href="#contact" class="hidden sm:inline-block px-6 py-2 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all">View All</a>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- 9 Portfolio Items -->
+                    <a href="#contact" class="group block overflow-hidden rounded-2xl relative aspect-[4/3] cursor-pointer hover-lift"><img src="https://picsum.photos/seed/typixel1/800/600.jpg" alt="Project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6"><h3 class="text-xl font-bold text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Brand Identity</h3><p class="text-gray-300 text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">View Details &rarr;</p></div></a>
+                    <a href="#contact" class="group block overflow-hidden rounded-2xl relative aspect-[4/3] cursor-pointer hover-lift"><img src="https://picsum.photos/seed/typixel2/800/600.jpg" alt="Project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6"><h3 class="text-xl font-bold text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Website UI</h3><p class="text-gray-300 text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">View Details &rarr;</p></div></a>
+                    <a href="#contact" class="group block overflow-hidden rounded-2xl relative aspect-[4/3] cursor-pointer hover-lift"><img src="https://picsum.photos/seed/typixel3/800/600.jpg" alt="Project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6"><h3 class="text-xl font-bold text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Social Media</h3><p class="text-gray-300 text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">View Details &rarr;</p></div></a>
+                    <a href="#contact" class="group block overflow-hidden rounded-2xl relative aspect-[4/3] cursor-pointer hover-lift"><img src="https://picsum.photos/seed/typixel4/800/600.jpg" alt="Project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6"><h3 class="text-xl font-bold text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Packaging</h3><p class="text-gray-300 text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">View Details &rarr;</p></div></a>
+                    <a href="#contact" class="group block overflow-hidden rounded-2xl relative aspect-[4/3] cursor-pointer hover-lift"><img src="https://picsum.photos/seed/typixel5/800/600.jpg" alt="Project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6"><h3 class="text-xl font-bold text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Advertising</h3><p class="text-gray-300 text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">View Details &rarr;</p></div></a>
+                    <a href="#contact" class="group block overflow-hidden rounded-2xl relative aspect-[4/3] cursor-pointer hover-lift"><img src="https://picsum.photos/seed/typixel6/800/600.jpg" alt="Project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6"><h3 class="text-xl font-bold text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Branding</h3><p class="text-gray-300 text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">View Details &rarr;</p></div></a>
+                    <a href="#contact" class="group block overflow-hidden rounded-2xl relative aspect-[4/3] cursor-pointer hover-lift"><img src="https://picsum.photos/seed/typixel7/800/600.jpg" alt="Project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6"><h3 class="text-xl font-bold text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">UI/UX</h3><p class="text-gray-300 text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">View Details &rarr;</p></div></a>
+                    <a href="#contact" class="group block overflow-hidden rounded-2xl relative aspect-[4/3] cursor-pointer hover-lift"><img src="https://picsum.photos/seed/typixel8/800/600.jpg" alt="Project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6"><h3 class="text-xl font-bold text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Campaign</h3><p class="text-gray-300 text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">View Details &rarr;</p></div></a>
+                    <a href="#contact" class="group block overflow-hidden rounded-2xl relative aspect-[4/3] cursor-pointer hover-lift"><img src="https://picsum.photos/seed/typixel9/800/600.jpg" alt="Project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6"><h3 class="text-xl font-bold text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Promotional</h3><p class="text-gray-300 text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">View Details &rarr;</p></div></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== REVIEWS SECTION ========== -->
+        <section id="reviews" class="py-24 relative">
+            <div class="absolute top-0 left-0 w-full h-full bg-gradient-to-b from-dark-900 via-black to-dark-900 -z-10"></div>
+            <div class="max-w-7xl mx-auto px-5">
+                <div class="text-center mb-16">
+                    <span class="text-brand-600 font-bold uppercase tracking-widest text-xs">Feedback</span>
+                    <h2 class="text-3xl sm:text-4xl font-bold mt-2">Client Love</h2>
+                </div>
+
+                <!-- 1. STATIC REVIEWS -->
+                <h3 class="text-xl font-bold text-white mb-6 border-b border-white/10 pb-2">Featured Clients</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover-lift">
+                        <div class="flex items-center gap-1 mb-4">
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                        </div>
+                        <p class="text-sm text-gray-300 leading-relaxed mb-6">Typixel elevated our brand to new heights. Her attention to detail is unmatched.</p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand-700/20 flex items-center justify-center"><iconify-icon icon="lucide:store" class="text-brand-600 text-lg"></iconify-icon></div>
+                            <div><p class="text-sm font-bold text-white">Tourist Chamayam</p><p class="text-xs text-gray-500">Textiles Brand</p></div>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover-lift">
+                        <div class="flex items-center gap-1 mb-4">
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                        </div>
+                        <p class="text-sm text-gray-300 leading-relaxed mb-6">TyPixel delivered clean, professional designs with a strong brand sense. Our promotions now look premium.</p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand-700/20 flex items-center justify-center"><iconify-icon icon="lucide:briefcase" class="text-brand-600 text-lg"></iconify-icon></div>
+                            <div><p class="text-sm font-bold text-white">Business Client</p><p class="text-xs text-gray-500">Growing Brand</p></div>
+                        </div>
+                    </div>
+                    <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover-lift">
+                        <div class="flex items-center gap-1 mb-4">
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                            <iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>
+                        </div>
+                        <p class="text-sm text-gray-300 leading-relaxed mb-6">Fast delivery and amazing concepts. Highly recommended for UI/UX work.</p>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-brand-700/20 flex items-center justify-center"><iconify-icon icon="lucide:monitor" class="text-brand-600 text-lg"></iconify-icon></div>
+                            <div><p class="text-sm font-bold text-white">Neon Studio</p><p class="text-xs text-gray-500">Creative Agency</p></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 2. FIREBASE REVIEWS (Dynamic) -->
+                <h3 class="text-xl font-bold text-white mb-6 border-b border-white/10 pb-2">Community Reviews</h3>
+                <div id="firebase-reviews-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16 min-h-[100px]">
+                    <p class="text-gray-500 col-span-full text-center">Loading reviews...</p>
+                </div>
+
+                <!-- 3. ADD REVIEW FORM -->
+                <div class="max-w-xl mx-auto glass rounded-2xl p-8 border border-white/10">
+                    <h3 class="text-xl font-bold text-white mb-6 text-center">Write a Review</h3>
+                    <form id="review-form" class="space-y-4">
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Your Name</label>
+                            <input type="text" id="reviewer-name" required placeholder="John Doe" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm placeholder:text-gray-600 focus:outline-none focus:border-brand-600">
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Rating</label>
+                            <div class="star-rating">
+                                <input type="radio" id="star5" name="rating" value="5" /><label for="star5" title="5 stars">★</label>
+                                <input type="radio" id="star4" name="rating" value="4" /><label for="star4" title="4 stars">★</label>
+                                <input type="radio" id="star3" name="rating" value="3" /><label for="star3" title="3 stars">★</label>
+                                <input type="radio" id="star2" name="rating" value="2" /><label for="star2" title="2 stars">★</label>
+                                <input type="radio" id="star1" name="rating" value="1" /><label for="star1" title="1 star">★</label>
+                            </div>
+                        </div>
+                        <div>
+                            <label class="block text-xs font-semibold text-gray-400 uppercase tracking-wider mb-2">Review</label>
+                            <textarea id="reviewer-text" required rows="3" placeholder="Share your experience..." class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm placeholder:text-gray-600 focus:outline-none focus:border-brand-600 resize-none"></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-brand-600 hover:bg-brand-700 text-white font-bold uppercase tracking-wider py-3 rounded-xl transition-all">Submit to Database</button>
+                    </form>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== TEAM SECTION ========== -->
+        <section id="team" class="py-24 bg-black/30">
+            <div class="max-w-7xl mx-auto px-5 sm:px-8 text-center">
+                <span class="text-brand-600 font-bold uppercase tracking-widest text-xs">The Crew</span>
+                <h2 class="text-3xl sm:text-4xl font-bold mt-2 mb-16">Who Are We</h2>
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-6">
+                    <div class="group relative rounded-2xl overflow-hidden aspect-[3/4] hover-lift">
+                        <img src="https://picsum.photos/seed/ceo1/400/500.jpg" alt="CEO" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 flex flex-col justify-end p-4">
+                            <h3 class="text-white font-bold text-lg">Alex Morgan</h3>
+                            <p class="text-brand-500 text-xs font-bold uppercase tracking-wider mb-2">CEO & FOUNDER</p>
+                        </div>
+                    </div>
+                    <div class="group relative rounded-2xl overflow-hidden aspect-[3/4] hover-lift">
+                        <img src="https://picsum.photos/seed/ceo2/400/500.jpg" alt="Co-Founder" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 flex flex-col justify-end p-4">
+                            <h3 class="text-white font-bold text-lg">Sarah Jenkins</h3>
+                            <p class="text-brand-500 text-xs font-bold uppercase tracking-wider mb-2">CEO & FOUNDER</p>
+                        </div>
+                    </div>
+                    <div class="group relative rounded-2xl overflow-hidden aspect-[3/4] hover-lift">
+                        <img src="https://picsum.photos/seed/marketing/400/500.jpg" alt="Marketing" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 flex flex-col justify-end p-4">
+                            <h3 class="text-white font-bold text-lg">David Chen</h3>
+                            <p class="text-brand-500 text-xs font-bold uppercase tracking-wider mb-2">MARKETING MANAGER</p>
+                        </div>
+                    </div>
+                    <div class="group relative rounded-2xl overflow-hidden aspect-[3/4] hover-lift">
+                        <img src="https://picsum.photos/seed/creative/400/500.jpg" alt="Creative Director" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 flex flex-col justify-end p-4">
+                            <h3 class="text-white font-bold text-lg">Emily Ross</h3>
+                            <p class="text-brand-500 text-xs font-bold uppercase tracking-wider mb-2">CREATIVE DIRECTOR</p>
+                        </div>
+                    </div>
+                    <div class="group relative rounded-2xl overflow-hidden aspect-[3/4] hover-lift">
+                        <img src="https://picsum.photos/seed/strategist/400/500.jpg" alt="Brand Strategist" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 grayscale group-hover:grayscale-0">
+                        <div class="absolute inset-0 bg-gradient-to-t from-black via-black/50 to-transparent opacity-80 flex flex-col justify-end p-4">
+                            <h3 class="text-white font-bold text-lg">James Wilson</h3>
+                            <p class="text-brand-500 text-xs font-bold uppercase tracking-wider mb-2">BRAND STRATEGIST</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== CONTACT (Web3Forms) ========== -->
+        <section id="contact" class="py-24 bg-gradient-to-t from-dark-900 to-black">
+            <div class="max-w-7xl mx-auto px-5">
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20">
+                    <div>
+                        <p class="text-brand-600 font-bold uppercase tracking-widest text-xs mb-3">Get In Touch</p>
+                        <h2 class="text-3xl sm:text-4xl font-bold text-white tracking-tight mb-6">Let's Collaborate</h2>
+                        <p class="text-base text-gray-400 font-light leading-relaxed mb-10">Have a project in mind? Fill out the form to send a direct collaboration inquiry to our email. We usually reply within 24 hours.</p>
+                        
+                        <div class="space-y-6">
+                            <a href="https://wa.me/919072891142" target="_blank" class="flex items-center gap-4 group">
+                                <div class="w-12 h-12 rounded-xl bg-green-600/10 flex items-center justify-center group-hover:bg-green-600 transition-all duration-300">
+                                    <iconify-icon icon="lucide:message-circle" class="text-green-600 group-hover:text-white text-xl transition-colors"></iconify-icon>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-white">WhatsApp</p>
+                                    <p class="text-sm text-gray-400">+91 90728 91142</p>
+                                </div>
+                            </a>
+                            <a href="mailto:rifadwork@gmail.com" class="flex items-center gap-4 group">
+                                <div class="w-12 h-12 rounded-xl bg-brand-600/10 flex items-center justify-center group-hover:bg-brand-600 transition-all duration-300">
+                                    <iconify-icon icon="lucide:mail" class="text-brand-600 group-hover:text-white text-xl transition-colors"></iconify-icon>
+                                </div>
+                                <div>
+                                    <p class="text-sm font-bold text-white">Email</p>
+                                    <p class="text-sm text-gray-400">rifadwork@gmail.com</p>
+                                </div>
+                            </a>
+                        </div>
+                    </div>
+
+                    <div>
+                        <div class="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl">
+                            <!-- 
+                                WEB3FORMS CONFIGURATION
+                                Action points to Web3Forms API
+                                Method is POST
+                                Hidden input for Access Key is required
+                            -->
+                            <form action="https://api.web3forms.com/submit" method="POST" id="contact-form" class="space-y-5">
+                                <!-- !!! REPLACE THIS VALUE WITH YOUR WEB3FORMS ACCESS KEY !!! -->
+                                <input type="hidden" name="access_key" value="YOUR_ACCESS_KEY">
+
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Your Name *</label>
+                                        <input type="text" id="contact-name" name="name" required placeholder="Your name" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm placeholder:text-gray-600 focus:outline-none focus:border-brand-600 transition-colors">
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Phone / WhatsApp *</label>
+                                        <input type="tel" id="contact-phone" name="phone" required placeholder="+91 XXXXX XXXXX" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm placeholder:text-gray-600 focus:outline-none focus:border-brand-600 transition-colors">
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Email *</label>
+                                    <input type="email" id="contact-email" name="email" required placeholder="your@email.com" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm placeholder:text-gray-600 focus:outline-none focus:border-brand-600 transition-colors">
+                                </div>
+                                <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Service Needed *</label>
+                                        <select id="contact-service" name="service" required class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm focus:outline-none focus:border-brand-600 transition-all appearance-none">
+                                            <option value="" class="bg-black">Select service</option>
+                                            <option value="Branding">Branding & Identity</option>
+                                            <option value="UI/UX">UI/UX Design</option>
+                                            <option value="Website">Website Design</option>
+                                            <option value="Social Media">Social Media Creatives</option>
+                                            <option value="Packaging">Packaging Design</option>
+                                        </select>
+                                    </div>
+                                    <div>
+                                        <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Budget Range</label>
+                                        <select id="contact-budget" name="budget" class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm focus:outline-none focus:border-brand-600 transition-all appearance-none">
+                                            <option value="" class="bg-black">Select budget</option>
+                                            <option value="Under ₹5,000">Under ₹5,000</option>
+                                            <option value="₹5,000 - ₹15,000">₹5,000 - ₹15,000</option>
+                                            <option value="₹15,000 - ₹35,000">₹15,000 - ₹35,000</option>
+                                            <option value="Above ₹35,000">Above ₹35,000</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-semibold text-gray-300 uppercase tracking-wider mb-2">Message</label>
+                                    <textarea id="contact-message" name="message" rows="4" placeholder="Describe your brand, what you need..." class="w-full px-4 py-3 rounded-xl bg-black/40 border border-white/10 text-white text-sm placeholder:text-gray-600 focus:outline-none focus:border-brand-600 transition-all resize-none"></textarea>
+                                </div>
+                                
+                                <button type="submit" id="contact-btn" class="w-full bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase tracking-widest py-4 rounded-xl flex items-center justify-center gap-2 transition-all">
+                                    <iconify-icon icon="lucide:send" class="text-base"></iconify-icon>
+                                    Send Collaboration Inquiry
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ========== FOOTER ========== -->
+        <footer class="bg-black border-t border-white/5 pt-16 pb-12">
+            <div class="max-w-7xl mx-auto px-5 sm:px-8">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-10">
+                    <div class="flex items-center justify-center md:justify-start gap-4">
+                        <img src="https://z-cdn-media.chatglm.cn/files/db59a431-5745-42ec-8575-eda0a0d7d874.png?auth_key=1877803378-171e0b259fba4a18b98bd102cd7552e3-0-9f785a189e477354911412f66e12d36d" alt="Typixel Logo" class="w-10 h-10 object-contain logo-spin">
+                        <div class="flex flex-col">
+                            <span class="text-white font-bold text-xl tracking-tight">Typixel</span>
+                            <span class="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Collaborate</span>
+                        </div>
+                    </div>
+                    <div class="text-center text-gray-500 text-sm order-2 md:order-none py-4 md:py-0">
+                        © 2025 Typixel Design Agency. All rights reserved.
+                    </div>
+                    <div class="flex items-center gap-6 justify-center md:justify-end order-1 md:order-none">
+                        <a href="https://www.instagram.com/typixelofficial" target="_blank" class="text-white hover:text-brand-600 transition-colors font-medium">Instagram</a>
+                        <a href="mailto:rifadwork@gmail.com" class="text-white hover:text-brand-600 transition-colors font-medium">Email</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        <!-- ========== FLOATING WHATSAPP ========== -->
+        <a href="https://wa.me/919072891142?text=Hi%20Typixel,%20I%20am%20interested%20in%20getting%20a%20design%20quote." target="_blank" class="fixed bottom-6 right-6 z-50 w-14 h-14 bg-green-500 hover:bg-green-600 rounded-full flex items-center justify-center shadow-2xl shadow-green-500/30 hover:shadow-green-500/50 hover:scale-110 transition-all duration-300">
+            <iconify-icon icon="lucide:message-circle" class="text-white text-2xl"></iconify-icon>
+        </a>
+
+        <!-- ========== LOGIC (FIREBASE + WEB3FORMS) ========== -->
+        <script type="module">
+            // --- 1. FIREBASE SETUP (Reviews) ---
+            import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js";
+            import { getDatabase, ref, push, onValue } from "https://www.gstatic.com/firebasejs/9.22.0/firebase-database.js";
+
+            // !!! REPLACE THESE WITH YOUR ACTUAL FIREBASE CONFIG KEYS !!!
+            const firebaseConfig = {
+                apiKey: "YOUR_API_KEY",
+                authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+                databaseURL: "https://YOUR_PROJECT_ID-default-rtdb.firebaseio.com",
+                projectId: "YOUR_PROJECT_ID",
+                storageBucket: "YOUR_PROJECT_ID.appspot.com",
+                messagingSenderId: "YOUR_SENDER_ID",
+                appId: "YOUR_APP_ID"
+            };
+
+            let db;
+            // Only initialize if keys are actually replaced
+            if (firebaseConfig.apiKey !== "YOUR_API_KEY") {
+                try {
+                    const app = initializeApp(firebaseConfig);
+                    db = getDatabase(app);
+                    console.log("Firebase initialized");
+                } catch (error) {
+                    console.error("Firebase Error:", error);
+                }
+            }
+
+            // 2. FIREBASE REVIEW FUNCTIONS
+            if (db) {
+                const reviewsRef = ref(db, 'reviews');
+
+                // Listen for changes
+                onValue(reviewsRef, (snapshot) => {
+                    const data = snapshot.val();
+                    const grid = document.getElementById('firebase-reviews-grid');
+                    grid.innerHTML = '';
+
+                    if (data) {
+                        const reviewsArray = Object.values(data).reverse();
+
+                        reviewsArray.forEach(review => {
+                            const stars = Array(review.rating).fill('<iconify-icon icon="lucide:star" class="text-amber-400 text-sm"></iconify-icon>').join('');
+                            const card = document.createElement('div');
+                            card.className = "bg-white/5 border border-white/10 rounded-2xl p-6 hover-lift fade-in";
+                            card.innerHTML = `
+                                <div class="flex items-center gap-1 mb-4">${stars}</div>
+                                <p class="text-sm text-gray-300 leading-relaxed mb-6">"${review.text}"</p>
+                                <div class="flex items-center gap-3">
+                                    <div class="w-10 h-10 rounded-full bg-brand-700/20 flex items-center justify-center"><iconify-icon icon="lucide:user" class="text-brand-600 text-lg"></iconify-icon></div>
+                                    <div><p class="text-sm font-bold text-white">${review.name}</p><p class="text-xs text-gray-500">Verified Client</p></div>
+                                </div>
+                            `;
+                            grid.appendChild(card);
+                        });
+                    } else {
+                        grid.innerHTML = '<p class="text-gray-500 col-span-full text-center">No reviews yet. Be the first!</p>';
+                    }
+                });
+
+                // Handle Submit Review
+                document.getElementById('review-form').addEventListener('submit', (e) => {
+                    e.preventDefault();
+                    const name = document.getElementById('reviewer-name').value;
+                    const text = document.getElementById('reviewer-text').value;
+                    const ratingInput = document.querySelector('input[name="rating"]:checked');
+                    const rating = ratingInput ? parseInt(ratingInput.value) : 5;
+
+                    const newReview = { name, rating, text, timestamp: Date.now() };
+                    push(reviewsRef, newReview)
+                        .then(() => {
+                            showToast("Review submitted successfully!");
+                            document.getElementById('review-form').reset();
+                        })
+                        .catch((error) => {
+                            console.error(error);
+                            alert("Error submitting review.");
+                        });
+                });
+            } else {
+                document.getElementById('firebase-reviews-grid').innerHTML = '<p class="text-gray-600 col-span-full text-center italic">Firebase is not configured. Reviews are currently disabled.</p>';
+            }
+        </script>
+
+        <script>
+            // --- 2. GENERAL UI & WEB3FORMS LOGIC ---
+
+            // Loader Logic
+            window.addEventListener('load', () => {
+                const loader = document.getElementById('app-loader');
+                const content = document.getElementById('main-content');
+                setTimeout(() => {
+                    loader.style.opacity = '0';
+                    setTimeout(() => {
+                        loader.style.display = 'none';
+                        content.style.display = 'block';
+                        content.querySelectorAll('.fade-in').forEach(el => {
+                            el.style.animationName = 'fadeIn';
+                        });
+                    }, 500);
+                }, 800);
+            });
+
+            // Mobile Menu
+            function toggleMenu() {
+                const menu = document.getElementById('mobile-menu');
+                menu.classList.toggle('hidden');
+                menu.classList.toggle('flex');
+            }
+
+            // Toast Notification Function
+            function showToast(message, type = 'success') {
+                const toast = document.getElementById('toast');
+                const msg = document.getElementById('toast-msg');
+                const icon = toast.querySelector('iconify-icon');
+                
+                msg.innerText = message;
+                
+                if (type === 'success') {
+                    toast.classList.add('success');
+                    toast.classList.remove('error');
+                    icon.setAttribute('icon', 'lucide:check-circle');
+                    icon.classList.replace('text-red-500', 'text-green-500');
+                } else {
+                    toast.classList.add('error');
+                    toast.classList.remove('success');
+                    icon.setAttribute('icon', 'lucide:x-circle');
+                    icon.classList.replace('text-green-500', 'text-red-500');
+                }
+
+                toast.classList.add('active');
+                setTimeout(() => { toast.classList.remove('active'); }, 3000);
+            }
+
+            // Web3Forms Contact Form Handler
+            document.getElementById('contact-form').addEventListener('submit', function(event) {
+                event.preventDefault();
+                
+                const btn = document.getElementById('contact-btn');
+                const originalText = btn.innerHTML;
+                const form = this;
+                const formData = new FormData(form);
+                
+                // Check if access key is still placeholder
+                if (formData.get('access_key') === "YOUR_ACCESS_KEY") {
+                    alert("Please add your Web3Forms Access Key in the code!");
+                    return;
+                }
+
+                // Loading State
+                btn.innerHTML = '<iconify-icon icon="lucide:loader-2" class="text-base animate-spin"></iconify-icon> Sending...';
+                btn.disabled = true;
+                btn.classList.add('opacity-75', 'cursor-not-allowed');
+
+                const object = Object.fromEntries(formData);
+                const json = JSON.stringify(object);
+
+                // Send to Web3Forms API
+                fetch('https://api.web3forms.com/submit', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: json
+                })
+                .then(async (response) => {
+                    let json = await response.json();
+                    if (response.status == 200) {
+                        showToast("Collab request sent successfully!", "success");
+                        form.reset();
+                    } else {
+                        showToast(json.message || "Something went wrong", "error");
+                    }
+                })
+                .catch(error => {
+                    showToast("Something went wrong!", "error");
+                })
+                .finally(() => {
+                    btn.innerHTML = originalText;
+                    btn.disabled = false;
+                    btn.classList.remove('opacity-75', 'cursor-not-allowed');
+                });
+            });
+        </script>
+</body>
+</html>
