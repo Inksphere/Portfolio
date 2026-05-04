@@ -60,8 +60,8 @@
         }
         
         /* Animation Utilities */
-        .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; }
-        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } from { opacity: 0; transform: translateY(20px); } }
+        .fade-in { animation: fadeIn 0.8s ease-out forwards; opacity: 0; transform: translateY(20px); }
+        @keyframes fadeIn { to { opacity: 1; transform: translateY(0); } }
         
         .hover-lift { transition: transform 0.3s ease, box-shadow 0.3s ease; }
         .hover-lift:hover { transform: translateY(-5px); box-shadow: 0 10px 30px -10px rgba(220, 38, 38, 0.3); }
@@ -153,10 +153,6 @@
                     <a href="#services" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Services</a>
                     <a href="#portfolio" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Portfolio</a>
                     <a href="#team" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Team</a>
-                    <!-- NEW LINKS -->
-                    <a href="price.html" class="text-sm font-medium text-gray-300 hover:text-brand-500 transition-colors">Pricing List</a>
-                    <a href="join.html" class="text-sm font-medium text-gray-300 hover:text-brand-500 transition-colors">Join Our Team</a>
-                    <!-- END NEW LINKS -->
                     <a href="#reviews" class="text-sm font-medium text-gray-300 hover:text-white transition-colors">Reviews</a>
                     <a href="#contact" class="text-sm font-medium text-brand-500 hover:text-white transition-colors">Contact</a>
                 </div>
@@ -173,16 +169,12 @@
                 </div>
             </div>
 
-            <!-- Mobile Menu (CHANGED BACKGROUND TO RED) -->
+            <!-- Mobile Menu -->
             <div id="mobile-menu" class="hidden absolute top-20 left-0 w-full bg-brand-600 border-b border-brand-700 p-6 flex-col gap-4 md:hidden shadow-2xl z-40">
                 <a onclick="toggleMenu()" href="#home" class="text-lg font-medium text-white hover:text-black transition-colors">Home</a>
                 <a onclick="toggleMenu()" href="#services" class="text-lg font-medium text-white hover:text-black transition-colors">Services</a>
                 <a onclick="toggleMenu()" href="#portfolio" class="text-lg font-medium text-white hover:text-black transition-colors">Portfolio</a>
                 <a onclick="toggleMenu()" href="#team" class="text-lg font-medium text-white hover:text-black transition-colors">Our Team</a>
-                <!-- NEW MOBILE LINKS -->
-                <a onclick="toggleMenu()" href="price.html" class="text-lg font-medium text-white hover:text-black transition-colors">Pricing List</a>
-                <a onclick="toggleMenu()" href="join.html" class="text-lg font-medium text-white hover:text-black transition-colors">Join Our Team</a>
-                <!-- END NEW MOBILE LINKS -->
                 <a onclick="toggleMenu()" href="#reviews" class="text-lg font-medium text-white hover:text-black transition-colors">Reviews</a>
                 <a onclick="toggleMenu()" href="#contact" class="text-lg font-medium text-white hover:text-black transition-colors">Contact</a>
                 <a href="https://wa.me/919072891142?text=Hi%20Typixel" class="w-full py-3 bg-black/20 text-white text-center rounded-full font-bold uppercase tracking-wider mt-4 border border-white/20">Let's Talk</a>
@@ -287,7 +279,6 @@
                     <a href="#contact" class="hidden sm:inline-block px-6 py-2 border border-white/20 rounded-full hover:bg-white hover:text-black transition-all">View All</a>
                 </div>
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <!-- 9 Portfolio Items -->
                     <a href="#contact" class="group block overflow-hidden rounded-2xl relative aspect-[4/3] cursor-pointer hover-lift"><img src="https://picsum.photos/seed/typixel1/800/600.jpg" alt="Project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6"><h3 class="text-xl font-bold text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Brand Identity</h3><p class="text-gray-300 text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">View Details &rarr;</p></div></a>
                     <a href="#contact" class="group block overflow-hidden rounded-2xl relative aspect-[4/3] cursor-pointer hover-lift"><img src="https://picsum.photos/seed/typixel2/800/600.jpg" alt="Project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6"><h3 class="text-xl font-bold text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Website UI</h3><p class="text-gray-300 text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">View Details &rarr;</p></div></a>
                     <a href="#contact" class="group block overflow-hidden rounded-2xl relative aspect-[4/3] cursor-pointer hover-lift"><img src="https://picsum.photos/seed/typixel3/800/600.jpg" alt="Project" class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"><div class="absolute inset-0 bg-gradient-to-t from-black/90 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-6"><h3 class="text-xl font-bold text-white transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">Social Media</h3><p class="text-gray-300 text-sm transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300 delay-100">View Details &rarr;</p></div></a>
@@ -310,7 +301,6 @@
                     <h2 class="text-3xl sm:text-4xl font-bold mt-2">Client Love</h2>
                 </div>
 
-                <!-- 1. STATIC REVIEWS ONLY -->
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
                     <div class="bg-white/5 border border-white/10 rounded-2xl p-6 hover-lift">
                         <div class="flex items-center gap-1 mb-4">
@@ -355,7 +345,6 @@
                     </div>
                 </div>
 
-                <!-- REPLACEMENT SECTION: WHY CHOOSE US -->
                 <div class="border-t border-white/10 pt-20">
                     <div class="text-center mb-12">
                         <span class="text-brand-600 font-bold uppercase tracking-widest text-xs">Benefits</span>
@@ -392,7 +381,6 @@
                         </div>
                     </div>
                 </div>
-                <!-- END REPLACEMENT SECTION -->
             </div>
         </section>
 
@@ -452,7 +440,6 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                    <!-- Item 1 -->
                     <div class="relative group">
                         <div class="absolute top-0 left-0 w-full h-1 bg-brand-600 rounded-full"></div>
                         <div class="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all hover:border-brand-600/50 h-full">
@@ -463,7 +450,6 @@
                             <p class="text-sm text-gray-400 leading-relaxed">We discuss your goals, target audience, and project requirements in detail.</p>
                         </div>
                     </div>
-                    <!-- Item 2 -->
                     <div class="relative group">
                         <div class="absolute top-0 left-0 w-full h-1 bg-brand-600 rounded-full"></div>
                         <div class="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all hover:border-brand-600/50 h-full">
@@ -474,7 +460,6 @@
                             <p class="text-sm text-gray-400 leading-relaxed">We create a roadmap and select best design approach for your brand.</p>
                         </div>
                     </div>
-                    <!-- Item 3 -->
                     <div class="relative group">
                         <div class="absolute top-0 left-0 w-full h-1 bg-brand-600 rounded-full"></div>
                         <div class="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all hover:border-brand-600/50 h-full">
@@ -485,7 +470,6 @@
                             <p class="text-sm text-gray-400 leading-relaxed">Our creative team builds your visuals with iterative feedback loops.</p>
                         </div>
                     </div>
-                    <!-- Item 4 -->
                     <div class="relative group">
                         <div class="absolute top-0 left-0 w-full h-1 bg-brand-600 rounded-full"></div>
                         <div class="bg-white/5 border border-white/10 rounded-2xl p-8 hover:bg-white/10 transition-all hover:border-brand-600/50 h-full">
@@ -499,7 +483,6 @@
                 </div>
             </div>
         </section>
-        <!-- END NEW SECTION -->
 
         <!-- ========== CONTACT (Web3Forms) ========== -->
         <section id="contact" class="py-24 bg-gradient-to-t from-dark-900 to-black">
@@ -520,7 +503,6 @@
                                     <p class="text-sm text-gray-400">+91 90728 91142</p>
                                 </div>
                             </a>
-                            <!-- FIXED MAILTO: Cleaned href -->
                             <a href="mailto:rifadwork@gmail.com?subject=Collaboration%20Inquiry" class="flex items-center gap-4 group">
                                 <div class="w-12 h-12 rounded-xl bg-brand-600/10 flex items-center justify-center group-hover:bg-brand-600 transition-all duration-300">
                                     <iconify-icon icon="lucide:mail" class="text-brand-600 group-hover:text-white text-xl transition-colors"></iconify-icon>
@@ -531,15 +513,24 @@
                                 </div>
                             </a>
                         </div>
+
+                        <!-- NEW HIGHLIGHTED LINKS -->
+                        <div class="grid grid-cols-2 gap-4 mt-8">
+                            <a href="price.html" class="group flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-brand-500/30 bg-brand-500/5 hover:bg-brand-600 hover:border-brand-600 transition-all duration-300 text-brand-400 hover:text-white">
+                                <iconify-icon icon="lucide:list" class="text-xl transition-transform group-hover:scale-110"></iconify-icon>
+                                <span class="text-sm font-bold uppercase tracking-wider">Price List</span>
+                            </a>
+                            <a href="team.html" class="group flex flex-col items-center justify-center gap-2 p-4 rounded-xl border border-brand-500/30 bg-brand-500/5 hover:bg-brand-600 hover:border-brand-600 transition-all duration-300 text-brand-400 hover:text-white">
+                                <iconify-icon icon="lucide:users" class="text-xl transition-transform group-hover:scale-110"></iconify-icon>
+                                <span class="text-sm font-bold uppercase tracking-wider">Join Our Team</span>
+                            </a>
+                        </div>
+                        <!-- END HIGHLIGHTED LINKS -->
                     </div>
 
                     <div>
                         <div class="bg-white/5 border border-white/10 rounded-3xl p-8 backdrop-blur-xl">
-                            <!-- 
-                                WEB3FORMS CONFIGURATION
-                            -->
                             <form action="https://api.web3forms.com/submit" method="POST" id="contact-form" class="space-y-5">
-                                <!-- ACCESS KEY INSERTED -->
                                 <input type="hidden" name="access_key" value="c24b9e92-ff67-447d-9ff5-ca86596ff861">
 
                                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-5">
@@ -595,38 +586,104 @@
             </div>
         </section>
 
-        <!-- ========== FOOTER (ENHANCED) ========== -->
-        <footer class="bg-black border-t border-white/5 pt-16 pb-12">
-            <div class="max-w-7xl mx-auto px-5 sm:px-8">
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-12 items-start">
-                    <!-- 1. Brand Column -->
-                    <div class="flex flex-col gap-4">
-                        <div class="flex items-center gap-4">
+        <!-- ========== FOOTER (Simple & Professional) ========== -->
+        <footer class="bg-black border-t border-white/10 pt-16 pb-8">
+            <div class="max-w-7xl mx-auto px-5">
+                <!-- Top Grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
+                    
+                    <!-- 1. Brand Section -->
+                    <div class="space-y-4">
+                        <div class="flex items-center gap-3">
                             <img src="https://z-cdn-media.chatglm.cn/files/db59a431-5745-42ec-8575-eda0a0d7d874.png?auth_key=1877803378-171e0b259fba4a18b98bd102cd7552e3-0-9f785a189e477354911412f66e12d36d" alt="Typixel Logo" class="w-10 h-10 object-contain logo-spin">
-                            <div class="flex flex-col">
-                                <span class="text-white font-bold text-xl tracking-tight">Typixel</span>
-                                <span class="text-[10px] font-medium text-gray-400 uppercase tracking-widest">Design Agency</span>
-                            </div>
+                            <span class="text-xl font-bold tracking-tight text-white">Typixel</span>
                         </div>
+                        <p class="text-sm text-gray-400 leading-relaxed">
+                            Creative design solutions that bring ideas to life.<br>
+                            We craft visuals that speak, inspire, and convert.
+                        </p>
                     </div>
 
-                    <!-- 2. Quick Links (NEW SECTION) -->
-                    <div class="flex flex-col gap-4">
-                        <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-2">Quick Links</h4>
-                        <a href="#services" class="text-gray-400 hover:text-brand-600 transition-colors text-sm">Our Services</a>
-                        <a href="#portfolio" class="text-gray-400 hover:text-brand-600 transition-colors text-sm">Our Work</a>
-                        <a href="price.html" class="text-gray-400 hover:text-brand-600 transition-colors text-sm">Pricing List</a>
-                        <a href="join.html" class="text-gray-400 hover:text-brand-600 transition-colors text-sm">Join Our Team</a>
+                    <!-- 2. Quick Links -->
+                    <div>
+                        <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-4">Quick Links</h4>
+                        <ul class="space-y-2">
+                            <li><a href="#home" class="text-sm text-gray-400 hover:text-brand-500 transition-colors">Home</a></li>
+                            <li><a href="#services" class="text-sm text-gray-400 hover:text-brand-500 transition-colors">Services</a></li>
+                            <li><a href="#portfolio" class="text-sm text-gray-400 hover:text-brand-500 transition-colors">Portfolio</a></li>
+                            <li><a href="#team" class="text-sm text-gray-400 hover:text-brand-500 transition-colors">Team</a></li>
+                            <li><a href="#reviews" class="text-sm text-gray-400 hover:text-brand-500 transition-colors">Reviews</a></li>
+                            <li><a href="#contact" class="text-sm text-gray-400 hover:text-brand-500 transition-colors">Contact</a></li>
+                        </ul>
                     </div>
 
-                    <!-- 3. Socials & Contact Column -->
-                    <div class="flex flex-col items-start gap-4 md:items-end">
-                        <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-2">Connect</h4>
-                        <div class="flex items-center gap-4">
-                            <a href="https://www.instagram.com/typixelofficial" target="_blank" class="text-white hover:text-brand-600 transition-colors font-medium text-sm">Instagram</a>
-                            <a href="mailto:rifadwork@gmail.com?subject=Collaboration%20Inquiry" class="text-white hover:text-brand-600 transition-colors font-medium text-sm">Email</a>
+                    <!-- 3. Services -->
+                    <div>
+                        <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-4">Services</h4>
+                        <ul class="space-y-2">
+                            <li><span class="text-sm text-gray-400">Logo Design</span></li>
+                            <li><span class="text-sm text-gray-400">Branding & Identity</span></li>
+                            <li><span class="text-sm text-gray-400">Social Media Design</span></li>
+                            <li><span class="text-sm text-gray-400">UI/UX Design</span></li>
+                            <li><span class="text-sm text-gray-400">Print Design</span></li>
+                            <li><span class="text-sm text-gray-400">Packaging Design</span></li>
+                        </ul>
+                    </div>
+
+                    <!-- 4. Contact Info & Socials -->
+                    <div>
+                        <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-4">Contact</h4>
+                        <ul class="space-y-3 text-sm text-gray-400 mb-6">
+                            <li class="flex items-center gap-2">
+                                <iconify-icon icon="lucide:map-pin" class="text-brand-500"></iconify-icon>
+                                <span>Kerala, India</span>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <iconify-icon icon="lucide:mail" class="text-brand-500"></iconify-icon>
+                                <a href="mailto:hello@yourbrand.com" class="hover:text-white transition-colors">hello@yourbrand.com</a>
+                            </li>
+                            <li class="flex items-center gap-2">
+                                <iconify-icon icon="lucide:phone" class="text-brand-500"></iconify-icon>
+                                <a href="tel:+919876543210" class="hover:text-white transition-colors">+91 98765 43210</a>
+                            </li>
+                        </ul>
+                        
+                        <h4 class="text-white font-bold uppercase tracking-widest text-sm mb-3">Follow Us</h4>
+                        <div class="flex gap-4">
+                            <a href="#" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-brand-600 hover:text-white text-gray-400 transition-all">
+                                <iconify-icon icon="lucide:instagram"></iconify-icon>
+                            </a>
+                            <a href="#" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-brand-600 hover:text-white text-gray-400 transition-all">
+                                <iconify-icon icon="lucide:dribbble"></iconify-icon>
+                            </a>
+                            <a href="#" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-brand-600 hover:text-white text-gray-400 transition-all">
+                                <iconify-icon icon="lucide:linkedin"></iconify-icon>
+                            </a>
+                            <a href="#" class="w-8 h-8 rounded-full bg-white/5 flex items-center justify-center hover:bg-brand-600 hover:text-white text-gray-400 transition-all">
+                                <iconify-icon icon="lucide:behance"></iconify-icon>
+                            </a>
                         </div>
-                        <p class="text-gray-500 text-sm mt-2">© 2025 Typixel Design Agency. All rights reserved.</p>
+                    </div>
+                </div>
+
+                <!-- 5. Newsletter Section -->
+                <div class="border-t border-white/5 py-10 mb-8">
+                    <div class="max-w-lg mx-auto text-center">
+                        <h4 class="text-white font-bold mb-2">Stay Updated</h4>
+                        <p class="text-sm text-gray-500 mb-4">Subscribe to our newsletter for the latest designs & offers.</p>
+                        <form id="newsletter-form" class="flex gap-2">
+                            <input type="email" placeholder="Enter your email" required class="flex-1 px-4 py-2 rounded-full bg-white/5 border border-white/10 text-white text-sm focus:outline-none focus:border-brand-600 transition-colors">
+                            <button type="submit" class="px-6 py-2 bg-brand-600 hover:bg-brand-700 text-white text-xs font-bold uppercase rounded-full transition-colors">Subscribe</button>
+                        </form>
+                    </div>
+                </div>
+
+                <!-- 6. Bottom Bar -->
+                <div class="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center text-xs text-gray-500 gap-4">
+                    <p>© 2026 Typixel. All Rights Reserved.</p>
+                    <div class="flex gap-6">
+                        <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                        <a href="#" class="hover:text-white transition-colors">Terms & Conditions</a>
                     </div>
                 </div>
             </div>
@@ -637,9 +694,7 @@
             <iconify-icon icon="lucide:message-circle" class="text-white text-2xl"></iconify-icon>
         </a>
 
-        <!-- ========== LOGIC (WEB3FORMS ONLY) ========== -->
-        <!-- Note: Firebase module script removed -->
-        
+        <!-- ========== LOGIC (WEB3FORMS & NEWSLETTER) ========== -->
         <script>
             // --- 2. GENERAL UI & WEB3FORMS LOGIC ---
 
@@ -722,7 +777,6 @@
                         form.reset();
 
                         // DYNAMIC WHATSAPP MESSAGE
-                        // Includes Name, Service, and Budget
                         const waMessage = `Hi Typixel, I am interested in collaborating.\n\nName: ${name}\nService: ${service}\nBudget: ${budget}`;
                         const encodedMessage = encodeURIComponent(waMessage);
 
@@ -740,6 +794,16 @@
                     submitBtn.innerHTML = originalBtnContent;
                     submitBtn.disabled = false;
                     submitBtn.classList.remove('opacity-75', 'cursor-not-allowed');
+                }
+            });
+
+            // Newsletter Form Handler
+            document.getElementById('newsletter-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                const input = this.querySelector('input');
+                if(input.value) {
+                    showToast("Subscribed successfully!", "success");
+                    input.value = '';
                 }
             });
         </script>
